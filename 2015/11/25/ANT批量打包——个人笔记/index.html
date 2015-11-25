@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>小段果果的个人博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。
+
+
+APK打包 我们做Android开发，无论写多少代码，最终都会生成一个APK格式的文件，放到Android手机中就能够安装运行。APK其实就是一个压缩文件，其中主要包括Manifest.xml，dex文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小段果果的个人博客">
+<meta property="og:url" content="http://yoursite.com/2015/11/25/ANT批量打包——个人笔记/index.html">
+<meta property="og:site_name" content="小段果果的个人博客">
+<meta property="og:description" content="博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。
+
+
+APK打包 我们做Android开发，无论写多少代码，最终都会生成一个APK格式的文件，放到Android手机中就能够安装运行。APK其实就是一个压缩文件，其中主要包括Manifest.xml，dex文">
+<meta property="og:image" content="http://img.blog.csdn.net/20151018224347005">
+<meta property="og:updated_time" content="2015-11-25T11:13:15.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小段果果的个人博客">
+<meta name="twitter:description" content="博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。
+
+
+APK打包 我们做Android开发，无论写多少代码，最终都会生成一个APK格式的文件，放到Android手机中就能够安装运行。APK其实就是一个压缩文件，其中主要包括Manifest.xml，dex文">
+  
+    <link rel="alternative" href="/atom.xml" title="小段果果的个人博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="img/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小段果果</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="/#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">含笑半步癫创始人博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">逗比来了创始人博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">BT一点通搜索引擎</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">个人CSDN博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">想傻瓜一样努力</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小段果果</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="img/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小段果果</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="/#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-ANT批量打包——个人笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/25/ANT批量打包——个人笔记/" class="article-date">
+  	<time datetime="2015-11-25T11:15:00.754Z" itemprop="datePublished">2015-11-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>  博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。</p>
+<hr>
+<ol>
+<li><p>APK打包<br> 我们做Android开发，无论写多少代码，最终都会生成一个APK格式的文件，放到Android手机中就能够安装运行。APK其实就是一个压缩文件，其中主要包括Manifest.xml，dex文件（就是你的纯代码）和资源文件。正常的话，我们就可以通过Android Studio或者eclipse直接”export”一个经过混淆并且带签名文件的APK。但是如果我们想打100个APK（100渠道），按照这个模式我们就得在AS或者EP中导出100个APK？那一天啥也别干了，就打包就能消耗你的一个工作日了。</p>
+</li>
+<li><p>APK的渠道号<br> 太官方的解释没劲！打个比方，你有一个APK准备让三个人去推广小周（360电子市场）小杨（木蚂蚁电子市场）小马（应用宝）。你怎么知道他们谁给你推广的多？谁推广的少那？渠道号应用而生。普遍情况下都是写在Manifest.xml文件中的。</p>
+</li>
+<li><p>APKTool<br> APKTool是google提供的反编译APK，打包APK的工具。下载APKTool.jar。在Dos下进入APKTool的目录输入命令即可。<br>反编译APK命令：<strong>apktool d -f</strong> Source.apk TargetFile<br>回编成APK命令：<strong>apktool b</strong> SourceFile<br>将签名文件打入APK命令： <strong>arsigner -keystore</strong> Your.keystore <strong>-storepass</strong> YourPassWD <strong>-signedjar</strong> Temp.apk  TargetAPK.apk</p>
+</li>
+<li><p>ANT<br>这个问题Who care?日后再议，反正用这个类似与脚本的工具，我们就能够一次打出多个不同渠道的APK。</p>
+</li>
+</ol>
+<hr>
+<p>总的说下批量打包的基础步骤<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String channel:ChannelList)</span><br><span class="line"> &#123;</span><br><span class="line">       <span class="number">1.</span>apktool 反编译APK</span><br><span class="line">       <span class="number">2.</span>修改 Manifest.xml中的渠道号中的值</span><br><span class="line">       <span class="number">3.</span>回编成APK</span><br><span class="line">       <span class="number">4.</span>打入签名文件</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>工具环境PS：<br>              JDK我老大建议用1.7<br>              APKTool 2.0以上的，要不然命令和以前的不一样。<br>              ANT这个官网自己去下载<br>              ant-contrib-1.0b3.jar 没这个就没有for循环嘻嘻直接甩到ANT的lib下面。<br>              然后上个图，我的打包目录是酱紫的<br>              <img src="http://img.blog.csdn.net/20151018224347005" alt="这里写图片描述"></p>
+<hr>
+<p>好了，把环境配置妥当。上关键build下的脚本方法</p>
+<ol>
+<li>读取渠道号并开始循环</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"read_channel"</span>  &gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="title">loadfile</span>   <span class="attribute">property</span>=<span class="value">"channelList"</span>  <span class="attribute">srcFile</span>=<span class="value">"$&#123;channelFile&#125;"</span>   <span class="attribute">encoding</span>=<span class="value">"UTF-8"</span>/&gt;</span>  </span><br><span class="line">             <span class="tag">&lt;<span class="title">echo</span>   <span class="attribute">message</span>=<span class="value">"the channel is $&#123;channelList&#125;"</span>/&gt;</span>  </span><br><span class="line">			 <span class="tag">&lt;<span class="title">foreach</span> <span class="attribute">list</span>=<span class="value">"$&#123;channelList&#125;"</span> <span class="attribute">target</span>=<span class="value">"finish"</span> <span class="attribute">param</span>=<span class="value">"channel"</span> <span class="attribute">delimiter</span>=<span class="value">"#"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">foreach</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>解包</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"apktoolapk"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;apktoopaht&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"d"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-f"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/source_apk/MyAPK.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-0"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/temp"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>修改Manifest.xml</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"replacement"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">replace</span> <span class="attribute">file</span>=<span class="value">"$&#123;manifest-xml&#125;"</span>  <span class="attribute">encoding</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">replacefilter</span> <span class="attribute">token</span>=<span class="value">"$&#123;oldChannel&#125;"</span> <span class="attribute">value</span>=<span class="value">"$&#123;channel&#125;"</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">replace</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>重新打包</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"builderapk"</span>  &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;apktoopaht&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"b"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/temp"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>打入签名</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"jarsigner"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;jarsigner&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-keystore"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.file&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-storepass"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.pass&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-keypass"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.pass&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-signedjar"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;sueccess_apk_dir&#125;/MyAPK_$&#123;channel&#125;.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;out_apk_dir&#125;MyAPK.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.name&#125;"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>备注</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">name</span>=<span class="value">"android_project"</span> <span class="attribute">default</span>=<span class="value">"read_channel"</span> <span class="attribute">basedir</span>=<span class="value">"."</span>&gt;</span>这个是配置文件的头部 default定义的是第一个执行的方法相当于Java中的main函数。basedir（会不会看英文？）</span><br><span class="line"></span><br><span class="line">$&#123;XXXXX&#125;这种都是变量在buildProjectHome配置了什么keystore.name之类的。</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">target</span> /&gt;</span>这种是方法其中方法调用比较好玩，举个例子如果我的执行顺序是A-&gt;B-&gt;C。那么在ANT的脚本中就得</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">name</span>=<span class="value">"android_project"</span> <span class="attribute">default</span>=<span class="value">"C"</span> <span class="attribute">basedir</span>=<span class="value">"."</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"C"</span> <span class="attribute">depends</span>=<span class="value">"B"</span>&gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"B"</span> <span class="attribute">depends</span>=<span class="value">"A"</span>&gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"A"</span> &gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line"></span><br><span class="line">我上面代码没有depends。额~~~业务逻辑~~~你们懂</span><br></pre></td></tr></table></figure>
+<p>额~差不多了吧~具体环境配置那块网上一坨一坨的。妥了，该洗洗碎了！</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/11/25/View的事件分发机制——简单明了/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="ANT批量打包——个人笔记" data-title="" data-url="http://yoursite.com/2015/11/25/ANT批量打包——个人笔记/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 小段果果
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

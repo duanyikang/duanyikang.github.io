@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>小段果果的个人博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小段果果的个人博客">
+<meta property="og:url" content="http://yoursite.com/2015/11/25/自定义Switch——第一次写博客/index.html">
+<meta property="og:site_name" content="小段果果的个人博客">
+<meta property="og:description" content="本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3">
+<meta property="og:image" content="http://img.blog.csdn.net/20151011013226814">
+<meta property="og:updated_time" content="2015-11-25T11:11:57.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小段果果的个人博客">
+<meta name="twitter:description" content="本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3">
+  
+    <link rel="alternative" href="/atom.xml" title="小段果果的个人博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="img/head.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">小段果果</a></h1>
+		</hgroup>
+
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						<li>友情链接</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="/#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">含笑半步癫创始人博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">逗比来了创始人博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">BT一点通搜索引擎</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">个人CSDN博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">想傻瓜一样努力</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">小段果果</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				<img lazy-src="img/head.jpg" class="js-avatar">
+			</div>
+			<hgroup>
+			  <h1 class="header-author">小段果果</h1>
+			</hgroup>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="/#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="/#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="/#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+      <div class="body-wrap"><article id="post-自定义Switch——第一次写博客" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/25/自定义Switch——第一次写博客/" class="article-date">
+  	<time datetime="2015-11-25T11:11:57.586Z" itemprop="datePublished">2015-11-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>   本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑<br>   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3–MD大哭）。好吧自己动手丰衣足食，其实这个东西很简单。话不多说上代码。可能写这个就是给自己看，好让自己的思路更加清晰点。额~莫名都这么晚了。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.dyk.viewdemo;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> android.content.Context;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Bitmap;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.BitmapFactory;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Canvas;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Matrix;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Paint;</span><br><span class="line">    <span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line">    <span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line">    <span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">      * Created by DYK on 2015/10/10.</span><br><span class="line">    */</span></span><br><span class="line">       <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwitchButton</span> <span class="keyword">extends</span> <span class="title">View</span> <span class="keyword">implements</span>  <span class="title">View</span>.<span class="title">OnTouchListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//两张背景一个滑动的小按钮，不一定非得是Bitmap,发挥想象力咯</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> Bitmap bg_Open;</span><br><span class="line">    <span class="keyword">private</span> Bitmap bg_Close;</span><br><span class="line">    <span class="keyword">private</span> Bitmap slip_Button;</span><br><span class="line"></span><br><span class="line"><span class="comment">//OnTouch()记录你的手指轨迹然后在onDraw()里绘制（这都是国际惯例了）</span></span><br><span class="line">      </span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">float</span> StartX;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">float</span> EndX;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//两个标记的小东西，是否在滑动？是open还是close?</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> IsSlip = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> Status = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//对外的接口，要不然别人怎么知道是打开还是关闭</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> OnChangedListener onChangedListener;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SwitchButton</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SwitchButton</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取资源，没啥好玩的</span></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        bg_Open = BitmapFactory.decodeResource(getResources(), R.drawable.open);</span><br><span class="line">        bg_Close = BitmapFactory.decodeResource(getResources(), R.drawable.close);</span><br><span class="line">        slip_Button = BitmapFactory.decodeResource(getResources(), R.drawable.slip);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//简单期间，直接把大小设置成了背景图的大小，开发中不要这么做</span></span><br><span class="line">   </span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        setMeasuredDimension(bg_Open.getWidth(), bg_Open.getHeight());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据你Action.up的X位置实现活动和最终status的判断，小学生都能搞定。关于图片的缩放你可以好好的研究下，一用矩阵啦和Rect。</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">        Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        <span class="keyword">if</span> (EndX &lt; bg_Open.getWidth() / <span class="number">2</span>)</span><br><span class="line">            canvas.drawBitmap(bg_Open, matrix, paint);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            canvas.drawBitmap(bg_Close, matrix, paint);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">float</span> tempX = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IsSlip) &#123;</span><br><span class="line">            <span class="keyword">if</span> (EndX &gt;= bg_Open.getWidth())</span><br><span class="line">                tempX = bg_Open.getWidth() - slip_Button.getWidth() / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tempX = EndX - slip_Button.getWidth() / <span class="number">2</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (Status)</span><br><span class="line">                tempX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tempX = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (tempX &lt; <span class="number">0</span>)</span><br><span class="line">            tempX = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (tempX &gt; bg_Open.getWidth() - slip_Button.getWidth()) &#123;</span><br><span class="line">            tempX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawBitmap(slip_Button, tempX, <span class="number">0</span>, paint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View view, MotionEvent motionEvent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (motionEvent.getAction()) &#123;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">                <span class="keyword">if</span> (motionEvent.getX() &gt; bg_Open.getWidth() || motionEvent.getY() &gt; bg_Open.getHeight())</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    IsSlip = <span class="keyword">true</span>;</span><br><span class="line">                    StartX = motionEvent.getX();</span><br><span class="line">                    EndX = StartX;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">                EndX = motionEvent.getX();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                IsSlip = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">if</span> (motionEvent.getX() &gt;= bg_Open.getWidth() / <span class="number">2</span>) &#123;</span><br><span class="line">                    Status = <span class="keyword">true</span>;</span><br><span class="line">                    EndX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    Status = <span class="keyword">false</span>;</span><br><span class="line">                    EndX = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">               <span class="comment">// onChangedListener.OnChangedListner(Status);</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        invalidate();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setStatus</span><span class="params">(<span class="keyword">boolean</span> status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (status)</span><br><span class="line">            EndX = bg_Open.getWidth();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            EndX = <span class="number">0</span>;</span><br><span class="line">        Status = status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setOnChangedListener</span><span class="params">(OnChangedListener listener)</span> </span>&#123;</span><br><span class="line">        onChangedListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnChangedListener</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">OnChangedListner</span><span class="params">(<span class="keyword">boolean</span> status)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>国际惯例上图，那三张图是我用画图工具自己画的，嘻嘻<br><img src="http://img.blog.csdn.net/20151011013226814" alt="这里写图片描述"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/11/25/仿keep休息倒计时——自定义控件/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/25/我是小段果果/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">我是小段果果</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="自定义Switch——第一次写博客" data-title="" data-url="http://yoursite.com/2015/11/25/自定义Switch——第一次写博客/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2015 小段果果
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

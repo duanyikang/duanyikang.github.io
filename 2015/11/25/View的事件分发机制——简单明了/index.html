@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>我是小段果果 | 小段果果的个人博客</title>
+  <title>小段果果的个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="致力于android开发11个月">
+  <meta name="description" content="最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。
+问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说">
 <meta property="og:type" content="article">
-<meta property="og:title" content="我是小段果果">
-<meta property="og:url" content="http://yoursite.com/2015/11/25/我是小段果果/index.html">
+<meta property="og:title" content="小段果果的个人博客">
+<meta property="og:url" content="http://yoursite.com/2015/11/25/View的事件分发机制——简单明了/index.html">
 <meta property="og:site_name" content="小段果果的个人博客">
-<meta property="og:description" content="致力于android开发11个月">
-<meta property="og:updated_time" content="2015-11-25T05:37:28.039Z">
+<meta property="og:description" content="最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。
+问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说">
+<meta property="og:updated_time" content="2015-11-25T11:12:22.660Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我是小段果果">
-<meta name="twitter:description" content="致力于android开发11个月">
+<meta name="twitter:title" content="小段果果的个人博客">
+<meta name="twitter:description" content="最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。
+问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说">
   
     <link rel="alternative" href="/atom.xml" title="小段果果的个人博客" type="application/atom+xml">
   
@@ -187,11 +190,11 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap"><article id="post-我是小段果果" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-View的事件分发机制——简单明了" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/11/25/我是小段果果/" class="article-date">
-  	<time datetime="2015-11-25T05:37:28.039Z" itemprop="datePublished">2015-11-25</time>
+      <a href="/2015/11/25/View的事件分发机制——简单明了/" class="article-date">
+  	<time datetime="2015-11-25T11:14:45.716Z" itemprop="datePublished">2015-11-25</time>
 </a>
     </div>
   
@@ -200,27 +203,27 @@
       <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      我是小段果果
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-        
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>致力于android开发11个月</p>
+        <p>最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。</p>
+<p>问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说先上一段小代码。</p>
+<pre><code>//开始分发咯
+public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
+{
+     boolean <span class="literal">result</span>=<span class="literal">false</span>;
+     <span class="keyword">if</span>(onInterceptTouchEvent(event))//问问自己要不要
+     {
+        resulet=onTouchEvent(event);//自己的触摸事件
+     }
+     <span class="keyword">else</span>
+     {
+        resulet=child.dispatchTouchEvent(event);//调用子<span class="type">View</span>的事件分发
+     }
+     <span class="keyword">return</span> <span class="literal">result</span>;
+}
+</code></pre><p>得了，就上面的算是伪代码吧，感觉应对普通的ViewGroup事件冲突算是bingo咯。得解释下下，顺便理理自己的思路。</p>
+<p>View的事件分发，主要得分清楚是View还是ViewGroup。其中涉及到ViewGroup事件分发的方法是dispatchTouchEvent-&gt;onInterceptTouchEvent-&gt;onTouchEvent。调用的顺序我也标注出来了。而单纯的View事件分发中没有onInterceptTouchEvent。</p>
+<p> 好啦，具体是怎么分发的看我的伪代码就成，其中方法中的实现细节（你丫自己重写个试试不就得了？）。国际惯例回答最初上面的那个问题。<br> QU:子View实现了OnClick方法而父控件的OnTouch不响应<br> AN:在父viewgroup中intercept方法中判断是否向左或向右方法。如果是则return true(调用自己的ontouch)。如果不是则返回false将触摸事件给自己的childview消费。(现在的问题是不是跑到判断是否向左右滑动啦？哈哈)<br> PS：正常情况下一次点击事件只能被一个View给消费了，如果子View返回了true,父控件就不会响应了。也有特殊情况，比如在ontoutch方法中将Event强制给了别的View。那就有两个View会响应本次的“抚摸”了~</p>
 
       
     </div>
@@ -230,7 +233,7 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/11/25/自定义Switch——第一次写博客/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/11/25/ANT批量打包——个人笔记/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
@@ -239,6 +242,11 @@
       </div>
     </a>
   
+  
+    <a href="/2015/11/25/蓝牙聊天小项目——持续更新中（2015.11.15更）/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <strong class="article-nav-caption">></strong>
+    </a>
   
 </nav>
 
@@ -265,7 +273,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="我是小段果果" data-title="我是小段果果" data-url="http://yoursite.com/2015/11/25/我是小段果果/"></div>
+	<div class="ds-thread" data-thread-key="View的事件分发机制——简单明了" data-title="" data-url="http://yoursite.com/2015/11/25/View的事件分发机制——简单明了/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
