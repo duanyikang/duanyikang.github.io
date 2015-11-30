@@ -114,7 +114,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						
+						<a href="/tags/ANT/" style="font-size: 10px;">ANT</a> <a href="/tags/View事件分发/" style="font-size: 10px;">View事件分发</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/android打包/" style="font-size: 10px;">android打包</a> <a href="/tags/自定义View/" style="font-size: 15px;">自定义View</a> <a href="/tags/蓝牙/" style="font-size: 10px;">蓝牙</a>
 					</div>
 				</section>
 				
@@ -192,347 +192,6 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-ANT批量打包——个人笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/25/ANT批量打包——个人笔记/" class="article-date">
-  	<time datetime="2015-11-25T11:24:15.284Z" itemprop="datePublished">2015-11-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/25/ANT批量打包——个人笔记/">ANT批量打包——个人笔记</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>  博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。</p>
-<hr>
-<ol>
-<li><p>APK打包<br> 我们做Android开发，无论写多少代码，最终都会生成一个APK格式的文件，放到Android手机中就能够安装运行。APK其实就是一个压缩文件，其中主要包括Manifest.xml，dex文件（就是你的纯代码）和资源文件。正常的话，我们就可以通过Android Studio或者eclipse直接”export”一个经过混淆并且带签名文件的APK。但是如果我们想打100个APK（100渠道），按照这个模式我们就得在AS或者EP中导出100个APK？那一天啥也别干了，就打包就能消耗你的一个工作日了。</p>
-</li>
-<li><p>APK的渠道号<br> 太官方的解释没劲！打个比方，你有一个APK准备让三个人去推广小周（360电子市场）小杨（木蚂蚁电子市场）小马（应用宝）。你怎么知道他们谁给你推广的多？谁推广的少那？渠道号应用而生。普遍情况下都是写在Manifest.xml文件中的。</p>
-</li>
-<li><p>APKTool<br> APKTool是google提供的反编译APK，打包APK的工具。下载APKTool.jar。在Dos下进入APKTool的目录输入命令即可。<br>反编译APK命令：<strong>apktool d -f</strong> Source.apk TargetFile<br>回编成APK命令：<strong>apktool b</strong> SourceFile<br>将签名文件打入APK命令： <strong>arsigner -keystore</strong> Your.keystore <strong>-storepass</strong> YourPassWD <strong>-signedjar</strong> Temp.apk  TargetAPK.apk</p>
-</li>
-<li><p>ANT<br>这个问题Who care?日后再议，反正用这个类似与脚本的工具，我们就能够一次打出多个不同渠道的APK。</p>
-</li>
-</ol>
-<hr>
-<p>总的说下批量打包的基础步骤<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(String channel:ChannelList)</span><br><span class="line"> &#123;</span><br><span class="line">       <span class="number">1.</span>apktool 反编译APK</span><br><span class="line">       <span class="number">2.</span>修改 Manifest.xml中的渠道号中的值</span><br><span class="line">       <span class="number">3.</span>回编成APK</span><br><span class="line">       <span class="number">4.</span>打入签名文件</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
-<hr>
-<p>工具环境PS：<br>              JDK我老大建议用1.7<br>              APKTool 2.0以上的，要不然命令和以前的不一样。<br>              ANT这个官网自己去下载<br>              ant-contrib-1.0b3.jar 没这个就没有for循环嘻嘻直接甩到ANT的lib下面。<br>              然后上个图，我的打包目录是酱紫的<br>              <img src="http://img.blog.csdn.net/20151018224347005" alt="这里写图片描述"></p>
-<hr>
-<p>好了，把环境配置妥当。上关键build下的脚本方法</p>
-<ol>
-<li>读取渠道号并开始循环</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"read_channel"</span>  &gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="title">loadfile</span>   <span class="attribute">property</span>=<span class="value">"channelList"</span>  <span class="attribute">srcFile</span>=<span class="value">"$&#123;channelFile&#125;"</span>   <span class="attribute">encoding</span>=<span class="value">"UTF-8"</span>/&gt;</span>  </span><br><span class="line">             <span class="tag">&lt;<span class="title">echo</span>   <span class="attribute">message</span>=<span class="value">"the channel is $&#123;channelList&#125;"</span>/&gt;</span>  </span><br><span class="line">			 <span class="tag">&lt;<span class="title">foreach</span> <span class="attribute">list</span>=<span class="value">"$&#123;channelList&#125;"</span> <span class="attribute">target</span>=<span class="value">"finish"</span> <span class="attribute">param</span>=<span class="value">"channel"</span> <span class="attribute">delimiter</span>=<span class="value">"#"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="title">foreach</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>解包</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"apktoolapk"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;apktoopaht&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"d"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-f"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/source_apk/MyAPK.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-0"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/temp"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>修改Manifest.xml</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"replacement"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">replace</span> <span class="attribute">file</span>=<span class="value">"$&#123;manifest-xml&#125;"</span>  <span class="attribute">encoding</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="title">replacefilter</span> <span class="attribute">token</span>=<span class="value">"$&#123;oldChannel&#125;"</span> <span class="attribute">value</span>=<span class="value">"$&#123;channel&#125;"</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">replace</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>重新打包</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"builderapk"</span>  &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;apktoopaht&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"b"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;project.home&#125;/temp"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>打入签名</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"jarsigner"</span> &gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="title">exec</span> <span class="attribute">executable</span>=<span class="value">"$&#123;jarsigner&#125;"</span> <span class="attribute">failonerror</span>=<span class="value">"true"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-keystore"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.file&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-storepass"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.pass&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-keypass"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.pass&#125;"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"-signedjar"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;sueccess_apk_dir&#125;/MyAPK_$&#123;channel&#125;.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;out_apk_dir&#125;MyAPK.apk"</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="title">arg</span> <span class="attribute">value</span>=<span class="value">"$&#123;keystore.name&#125;"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="title">exec</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>备注</li>
-</ol>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">name</span>=<span class="value">"android_project"</span> <span class="attribute">default</span>=<span class="value">"read_channel"</span> <span class="attribute">basedir</span>=<span class="value">"."</span>&gt;</span>这个是配置文件的头部 default定义的是第一个执行的方法相当于Java中的main函数。basedir（会不会看英文？）</span><br><span class="line"></span><br><span class="line">$&#123;XXXXX&#125;这种都是变量在buildProjectHome配置了什么keystore.name之类的。</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">target</span> /&gt;</span>这种是方法其中方法调用比较好玩，举个例子如果我的执行顺序是A-&gt;B-&gt;C。那么在ANT的脚本中就得</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="title">project</span> <span class="attribute">name</span>=<span class="value">"android_project"</span> <span class="attribute">default</span>=<span class="value">"C"</span> <span class="attribute">basedir</span>=<span class="value">"."</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"C"</span> <span class="attribute">depends</span>=<span class="value">"B"</span>&gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"B"</span> <span class="attribute">depends</span>=<span class="value">"A"</span>&gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="title">target</span> <span class="attribute">name</span>=<span class="value">"A"</span> &gt;</span></span><br><span class="line">    do your work</span><br><span class="line">    <span class="tag">&lt;/<span class="title">target</span>&gt;</span></span><br><span class="line"></span><br><span class="line">我上面代码没有depends。额~~~业务逻辑~~~你们懂</span><br></pre></td></tr></table></figure>
-<p>额~差不多了吧~具体环境配置那块网上一坨一坨的。妥了，该洗洗碎了！</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-View的事件分发机制——简单明了" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/25/View的事件分发机制——简单明了/" class="article-date">
-  	<time datetime="2015-11-25T11:23:54.990Z" itemprop="datePublished">2015-11-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/25/View的事件分发机制——简单明了/">View的事件分发机制——简单明了</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。</p>
-<p>问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说先上一段小代码。</p>
-<pre><code>//开始分发咯
-public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
-{
-     boolean <span class="literal">result</span>=<span class="literal">false</span>;
-     <span class="keyword">if</span>(onInterceptTouchEvent(event))//问问自己要不要
-     {
-        resulet=onTouchEvent(event);//自己的触摸事件
-     }
-     <span class="keyword">else</span>
-     {
-        resulet=child.dispatchTouchEvent(event);//调用子<span class="type">View</span>的事件分发
-     }
-     <span class="keyword">return</span> <span class="literal">result</span>;
-}
-</code></pre><p>得了，就上面的算是伪代码吧，感觉应对普通的ViewGroup事件冲突算是bingo咯。得解释下下，顺便理理自己的思路。</p>
-<p>View的事件分发，主要得分清楚是View还是ViewGroup。其中涉及到ViewGroup事件分发的方法是dispatchTouchEvent-&gt;onInterceptTouchEvent-&gt;onTouchEvent。调用的顺序我也标注出来了。而单纯的View事件分发中没有onInterceptTouchEvent。</p>
-<p> 好啦，具体是怎么分发的看我的伪代码就成，其中方法中的实现细节（你丫自己重写个试试不就得了？）。国际惯例回答最初上面的那个问题。<br> QU:子View实现了OnClick方法而父控件的OnTouch不响应<br> AN:在父viewgroup中intercept方法中判断是否向左或向右方法。如果是则return true(调用自己的ontouch)。如果不是则返回false将触摸事件给自己的childview消费。(现在的问题是不是跑到判断是否向左右滑动啦？哈哈)<br> PS：正常情况下一次点击事件只能被一个View给消费了，如果子View返回了true,父控件就不会响应了。也有特殊情况，比如在ontoutch方法中将Event强制给了别的View。那就有两个View会响应本次的“抚摸”了~</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-仿keep休息倒计时——自定义控件" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/25/仿keep休息倒计时——自定义控件/" class="article-date">
-  	<time datetime="2015-11-25T11:23:31.362Z" itemprop="datePublished">2015-11-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/25/仿keep休息倒计时——自定义控件/">仿keep休息倒计时——自定义控件</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>  今天中午不是很饿，闲来无事写点小东西。像傻瓜一样努力 by小段。<br>  最近一直在用keep健身，感觉很不错。发现它休息时候有个小东西蛮好的，不过也很常见一个倒计时的控件，其实很简单，我也就动手写下。先上人家的样子咯。<br>     <img src="http://img.blog.csdn.net/20151029122250854" alt="这里写图片描述"><br>   简短的分析下，里面是文字，下面是个圆圈，上面是个圆弧。（呵呵简单的很）那直接就上代码了。中午写的就是图简单咯。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> TimeView extends View &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Paint Bg_paint, Ft_paint, Tv_paint;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> Bg_color, Ft_color, Tv_color;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> LineWidth = <span class="number">20f</span>;</span><br><span class="line">    <span class="keyword">private</span> RectF ArcRectF;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> Centre;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> Radius;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> TimeText = <span class="number">60</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimeView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        super(context);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TimeView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        super(context, attrs);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//背景的圆圈</span></span><br><span class="line">        Bg_paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        Bg_color = Color.parseColor(<span class="string">"#808080"</span>);</span><br><span class="line">        Bg_paint.setColor(Bg_color);</span><br><span class="line">        Bg_paint.setStrokeWidth(LineWidth);</span><br><span class="line">        Bg_paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        Bg_paint.setAntiAlias(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//前面的圆弧</span></span><br><span class="line">        Ft_paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        Ft_color = Color.parseColor(<span class="string">"#09F709"</span>);</span><br><span class="line">        Ft_paint.setColor(Ft_color);</span><br><span class="line">        Ft_paint.setStrokeWidth(LineWidth);</span><br><span class="line">        Ft_paint.setStyle(Paint.Style.STROKE);</span><br><span class="line">        Ft_paint.setAntiAlias(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//文字画笔</span></span><br><span class="line">        Tv_paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        Tv_color = Color.parseColor(<span class="string">"#0909F7"</span>);</span><br><span class="line">        Tv_paint.setColor(Tv_color);</span><br><span class="line">        Tv_paint.setStrokeWidth(LineWidth);</span><br><span class="line">        Bg_paint.setAntiAlias(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @<span class="function">Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        super.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        <span class="keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY)</span><br><span class="line">            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(widthMeasureSpec));</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            setMeasuredDimension(<span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @<span class="function">Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        super.onDraw(canvas);</span><br><span class="line">        <span class="comment">//算出这里需要的区域</span></span><br><span class="line">        Centre = getWidth() / <span class="number">2</span>;</span><br><span class="line">        Radius = getWidth() / <span class="number">2</span> - <span class="number">20</span>;</span><br><span class="line">        ArcRectF = <span class="keyword">new</span> RectF(Centre - Radius, Centre - Radius, Centre + Radius, Centre + Radius);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//画出圆和圆弧</span></span><br><span class="line">        canvas.drawCircle(Centre, Centre, Radius, Bg_paint);</span><br><span class="line">        canvas.drawArc(ArcRectF, <span class="number">270f</span>, -<span class="number">360</span> * TimeText / <span class="number">60</span>, <span class="literal">false</span>, Ft_paint);</span><br><span class="line"></span><br><span class="line">       <span class="comment">//文字画在区域中央</span></span><br><span class="line">        Tv_paint.setTextSize(Radius * <span class="number">2</span> / <span class="number">3</span>);</span><br><span class="line">        Paint.FontMetricsInt fontMetrics = Tv_paint.getFontMetricsInt();</span><br><span class="line">        <span class="keyword">int</span> baseline = (<span class="keyword">int</span>) (ArcRectF.bottom + ArcRectF.top - fontMetrics.bottom - fontMetrics.top) / <span class="number">2</span>;</span><br><span class="line">        Tv_paint.setTextAlign(Paint.Align.CENTER);</span><br><span class="line">        canvas.drawText(String.valueOf(TimeText), ArcRectF.centerX(), baseline, Tv_paint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Timer timer = <span class="keyword">new</span> Timer();</span><br><span class="line">    TimerTask timerTask = <span class="keyword">new</span> TimerTask() &#123;</span><br><span class="line">        @<span class="function">Override</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (TimeText &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                TimeText = TimeText - <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                timer.cancel();</span><br><span class="line">            &#125;</span><br><span class="line">            postInvalidate();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    @<span class="function">Override</span><br><span class="line">    <span class="keyword">public</span> boolean <span class="title">onTouchEvent</span><span class="params">(MotionEvent event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                <span class="keyword">if</span> (TimeText &gt; <span class="number">0</span>)</span><br><span class="line">                    timer.schedule(timerTask, <span class="number">0</span>, <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/*今天是2015年11月8日，周日晚上。最近去见了一个高人，然后突然发现自己还有好多的缺点，不是好多，是全是缺点。有点膨胀了，唉。真的是好惭愧。不过知耻而后勇也是一种态度。都在心里。技术就得扎扎实实的走下去。路还很久远。作为一个菜鸟得加油。</span><br><span class="line">   话不多说就timer.cancel();的销毁的地方就有问题。如果控件在没有到达时间结束时就被销毁了怎么办？唉~~~~~还是自己太菜！*/</span></span><br><span class="line">    @<span class="function">Override</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDetachedFromWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        super.onDetachedFromWindow();</span><br><span class="line">        <span class="keyword">if</span>(timer!=null)</span><br><span class="line">           timer.cancel();<span class="comment">//android 要我去学习的地方太多了！自己太傻缺了。</span></span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://img.blog.csdn.net/20151029122759697" alt="这里写图片描述"></p>
-<p>bingo！呵呵，半小时。没有对外提供接口，各种参数都写死了。但是那又怎样？<br>周末还得接着把我的蓝牙聊天搞下，工作中努力完成需求！生活就是这样平平淡淡了，可能再也找不到上学时候的快乐了，像傻瓜一样快乐。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-蓝牙聊天小项目——持续更新中（2015.11.15更）" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/25/蓝牙聊天小项目——持续更新中（2015.11.15更）/" class="article-date">
-  	<time datetime="2015-11-25T11:23:06.247Z" itemprop="datePublished">2015-11-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/25/蓝牙聊天小项目——持续更新中（2015.11.15更）/">蓝牙聊天小项目——持续更新中（2015.11.15更）</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>   只要写上博客，感觉就停不下来。每周末不写点东西就感觉本周缺失点什么。最近给自己想了两个方向的内容，第一个方向是写些关于插件化的内容，第二就是蓝牙方向。好了啦，不纠结了反正两个方向我一定都会写出来的。先从简单的来弄吧，最近如果闲下来会持续写一个利用蓝牙实现聊天的小项目。也不知道多久会写完，反正断断续续会写到博客中。<br>  蓝牙不是太了解，大概粗的一瞅，WoWoW——BluetoothServerSocket，BluetoothSocket。一看到Socket就激动了，本人是网路工程专业出生，什么TCP/IP，OIS七层模型上学时候熟的很（当初在学校也是可以制霸一个班级）。以前用C#开发Socket顺的很，什么单播，组播，广播的。这突然就觉得Android蓝牙开发也应该差不多。然而事实并不是我想象中的那么容易。<br>  两个设备想要通信的前提是要知道对方的存在，在普通的Socket开发中，只要一台设备上线，直接发送个广播，在线设备收到这个广播后在向该广播的源地址发送个单播，bingo。两个设备就可以聊天啦。但是蓝牙额~~~上代码。<br>  首先说下今晚的目标，打开蓝牙然后扫描设备并显示出来。<br>  <img src="http://img.blog.csdn.net/20151025221312749" alt="项目结构截图"><br>  <img src="http://img.blog.csdn.net/20151025221706382" alt="MainActivity"><br>  <img src="http://img.blog.csdn.net/20151025221736180" alt="DeviceActivity"><br>  上面就是简陋的效果图。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Button bt_FindOtherDevice;</span><br><span class="line">    <span class="keyword">private</span> BluetoothAdapter bluetoothAdapter;<span class="comment">//主要玩的就是这个</span></span><br><span class="line">    <span class="keyword">private</span> Boolean isBluetoothOpen = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> RequestCode = <span class="number">1234</span>;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        init();</span><br><span class="line"></span><br><span class="line">        bt_FindOtherDevice.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (isBluetoothOpen&amp;&amp;bluetoothAdapter.isEnabled()) &#123;</span><br><span class="line">                    <span class="comment">//关键点哦~去发现设备吧！！！！</span></span><br><span class="line">                    bluetoothAdapter.startDiscovery();</span><br><span class="line"></span><br><span class="line">                    Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">                    intent.setClass(MainActivity.<span class="keyword">this</span>, DeviceActivity.class);</span><br><span class="line">                    startActivity(intent);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    Toast.makeText(MainActivity.<span class="keyword">this</span>, <span class="string">"请打开蓝牙"</span>, Toast.LENGTH_LONG).show();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        bt_FindOtherDevice = (Button) findViewById(R.id.bt_findotherdevice);</span><br><span class="line">        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();</span><br><span class="line">        <span class="comment">//想使用蓝牙，你得先把蓝牙打开，</span></span><br><span class="line">        <span class="keyword">if</span> (bluetoothAdapter.isEnabled()) &#123;</span><br><span class="line">            isBluetoothOpen = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Intent intent = <span class="keyword">new</span> Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);</span><br><span class="line">            <span class="comment">//去启动一个系统的Activity，来询问用户是否要打开蓝牙</span></span><br><span class="line">            startActivityForResult(intent, RequestCode);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onActivityResult</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode, Intent data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (requestCode == RequestCode) &#123;</span><br><span class="line">            <span class="comment">//此时蓝牙已经打开</span></span><br><span class="line">            isBluetoothOpen = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        <span class="comment">//关闭应用的时候把蓝牙关掉，良心开发者</span></span><br><span class="line">        bluetoothAdapter.disable();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 上面这段代码主要是打开蓝牙并且开启发现其他设备的功能。上下一段代码。</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">DeviceActivity</span> <span class="keyword"><span class="keyword">extends</span></span> <span class="title">Activity</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">ListView</span> lv_Device_List;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">List</span>&lt;<span class="type">BluetoothDevice</span>&gt; <span class="type">DeviceList</span> = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;<span class="type">BluetoothDevice</span>&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="type">DeviceAdapter</span> deviceAdapter;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> void onCreate(<span class="type">Bundle</span> savedInstanceState) &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(<span class="type">R</span>.layout.activity_device_list);</span><br><span class="line">        registerReceiver(discoveryResult,<span class="keyword">new</span> <span class="type">IntentFilter</span>(<span class="type">BluetoothDevice</span>.<span class="type">ACTION_FOUND</span>));</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> void init() &#123;</span><br><span class="line">        <span class="comment">//做些初始化的工作，并且设置adapter，这个adapter非常简单就是两个TextView，主要是为了以后方便扩展（单聊啦，讨论组啦。。。。）</span></span><br><span class="line">        deviceAdapter=<span class="keyword">new</span> <span class="type">DeviceAdapter</span>(<span class="keyword">this</span>,<span class="type">DeviceList</span>);</span><br><span class="line">        lv_Device_List = (<span class="type">ListView</span>) findViewById(<span class="type">R</span>.id.lv_device);</span><br><span class="line">        lv_Device_List.setAdapter(deviceAdapter);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*这个的注释得好好写写了，上段代码不是会打开startDiscovery()方法？这个过程是异步的，但是它找到一个设备就会发送“BluetoothDevice.ACTION_FOUND”这么一条广播，so我也采用BroadcastReceiver来实现找到设备。*/</span></span><br><span class="line">    <span class="comment">//isDiscovering()是否正在查找设备</span></span><br><span class="line">    <span class="comment">//BluetoothAdapter.ACTION_DISCOVERY_STARTED  开启发现设备</span></span><br><span class="line">    <span class="comment">//BluetoothAdapter.ACTION_DISCOVERY_FINISHED 发现设备这个过程over</span></span><br><span class="line">    <span class="comment">//cancelDiscovery() 取消发现过程</span></span><br><span class="line">      </span><br><span class="line">    <span class="type">BroadcastReceiver</span> discoveryResult = <span class="keyword">new</span> <span class="type">BroadcastReceiver</span>() &#123;</span><br><span class="line">        <span class="annotation">@Override</span></span><br><span class="line">        public void onReceive(<span class="type">Context</span> context, <span class="type">Intent</span> intent) &#123;</span><br><span class="line">            <span class="type">BluetoothDevice</span> remotDevice = intent.getParcelableExtra(<span class="type">BluetoothDevice</span>.<span class="type">EXTRA_DEVICE</span>);</span><br><span class="line">            <span class="type">DeviceList</span>.add(remotDevice);</span><br><span class="line">            deviceAdapter.notifyDataSetChanged();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>额，居然忘记了最重要的权限！！！</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:<span class="property">name</span>=<span class="string">"android.permission.BLUETOOTH"</span> /&gt;</span><br><span class="line">    &lt;uses-permission android:<span class="property">name</span>=<span class="string">"android.permission.BLUETOOTH_ADMIN"</span> /&gt;</span><br></pre></td></tr></table></figure>
-<p>好啦，今晚就写这么多咯，下周把建立BluetoothSocket的部分搞定。<br>最近可能心态有点问题了，刚毕业进入社会工作，尤其是工作了一段时间后，有点急有点慌，想的多了反而让自己心累。有时候会怪公司，会怪团队。当然，我从来都是先从自身反省。还是自己不够优秀。可能我一辈子也不会达到我理想中的高度，呵呵，不过那又如何？不要急慢慢来。别人用半年做好的事情，我可以用一年两年来做，不要放弃就好。</p>
-<p>————–2015.11.2<br>WOWOWO，本来是要周日更新的但周末家庭日，所以只能推迟到周一咯。还好自己一直在坚持的把写的东西记录下来。<br>言归正传，上次说到了开启蓝牙并且发现其他设备这个小功能模块。今天就在原来的基础上实现连接（Connect）设备并且监听设备的请求（Accept）。列下自己感觉有点小坑的地方。</p>
-<ol>
-<li>连接和配对是两码事情</li>
-<li>UUID 这个鄙人有点愚蠢了单纯的以为是端口标识了</li>
-</ol>
-<p>这两点会在代码中注释说明的，上代码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UtilPool</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> UUID Util_UUID;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String Util_NAME;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SUCCESS_CONNECT = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SUCCESS_ACCEPT = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BluetoothAdapter mAdapter;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Handler mHandler;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ExecutorService executorService = Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">UtilPool</span><span class="params">(BluetoothAdapter mAdapter, Handler mHandler)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.mAdapter = mAdapter;</span><br><span class="line">        <span class="keyword">this</span>.mHandler = mHandler;</span><br><span class="line">        <span class="comment">//两边的UUID必须是一样的，这是一个服务的唯一标识，而且这个UUID的值必须是,不要问我为什么。</span></span><br><span class="line"><span class="number">00001101</span>-<span class="number">0000</span>-<span class="number">1000</span>-<span class="number">8000</span>-<span class="number">00805F</span>9B34FB</span><br><span class="line">        Util_UUID = UUID.fromString(<span class="string">"00000000-0000-1000-8000-00805F9B34FB"</span>);</span><br><span class="line">        Util_NAME = mAdapter.getName();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//和一个socket建立连接</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">Connect</span><span class="params">(BluetoothDevice ClientDevice)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//切记先配对在连接，这里是检查配对么！</span></span><br><span class="line">        <span class="keyword">final</span> BluetoothDevice knownDevice = mAdapter.getRemoteDevice(ClientDevice.getAddress());</span><br><span class="line">        Set&lt;BluetoothDevice&gt; bondDevices = mAdapter.getBondedDevices();</span><br><span class="line">        <span class="keyword">if</span> (bondDevices.contains(knownDevice)) &#123;</span><br><span class="line">            <span class="comment">//配好对了，就不要发现其他设备咯</span></span><br><span class="line">            mAdapter.cancelDiscovery();</span><br><span class="line">            BluetoothSocket ClientScoket = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//给socket做上几号</span></span><br><span class="line">                ClientScoket = ClientDevice.createRfcommSocketToServiceRecord(Util_UUID);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">final</span> BluetoothSocket finalClientScoket = ClientScoket;</span><br><span class="line">            <span class="comment">//用下线程池</span></span><br><span class="line">            executorService.submit(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> (finalClientScoket != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            finalClientScoket.connect();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">                        e1.printStackTrace();</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            finalClientScoket.close();</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (IOException e2) &#123;</span><br><span class="line">                            e2.printStackTrace();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"><span class="comment">//上面这个遇到的异常先暂时不管，利用handler告诉主UI现成连接成功并且带上Socket好为后续的聊天做准备                    mHandler.obtainMessage(SUCCESS_CONNECT,finalClientScoket).sendToTarget();</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//接上面配对的话题，如果没有陪过对，那就开启系统默认的配对咯~</span></span><br><span class="line">                Method createBondMethod = BluetoothDevice.class.getMethod(<span class="string">"createBond"</span>);</span><br><span class="line">                createBondMethod.invoke(knownDevice);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创天socket服务</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">Accept</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        BluetoothServerSocket SocketServer = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//开启监听</span></span><br><span class="line">            SocketServer = mAdapter.listenUsingRfcommWithServiceRecord(Util_NAME, Util_UUID);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> BluetoothServerSocket finalSocketServer = SocketServer;</span><br><span class="line"></span><br><span class="line">        executorService.submit(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                BluetoothSocket socket = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        socket = finalSocketServer.accept();</span><br><span class="line"></span><br><span class="line"><span class="comment">//这个没有啥好讲的~死循环监听呗，收到就告诉UI有个人连上啦。</span></span><br><span class="line">                        mHandler.obtainMessage(SUCCESS_ACCEPT,socket).sendToTarget();</span><br><span class="line"></span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>测试上图<br>       <img src="http://img.blog.csdn.net/20151102234256778" alt="这里写图片描述"><br>       <img src="http://img.blog.csdn.net/20151102234320241" alt="这里写图片描述"><br>对了写了个Handler,接下来主要的任务就是在这个handler里面操作弄回来的socket了，无非就是流的读取和写入。妥妥的。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Handler mHandler = <span class="keyword">new</span> Handler() &#123;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> SUCCESS_CONNECT:</span><br><span class="line">                Toast.makeText(getApplicationContext(), <span class="string">"链接成功"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> SUCCESS_ACCEPT:</span><br><span class="line">                Toast.makeText(getApplicationContext(), <span class="string">"收到请求"</span>, Toast.LENGTH_LONG).show();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>好的，本次就到这里咯。预计周日晚上完成文字的接收和发送。整个可以入法眼的UI界面。蓝牙聊天小项目我预期的效果就是可以单独聊天，也可以群聊。可以发送文字，语音，图片。到那个时候就可以上穿完整的DEMO了。呵呵~自己还是慢期待的。<br>马上就到年底了，自己也马上工作了一年了，去年这个时候还在上海，考虑去那里工作的问题。不过还好，也可能是种缘分，让我找到了木蚂蚁！一个很适合我这种没有野心的程序员。一年我自己的成长很多，技术提高的也很多。更重要的是遇到了一帮子我愿意肝胆相照的朋友。</p>
-<p>———今天是2015.11.15晚上23点49。哈哈大概有两周没有更博客了。这两周发生了一些事情吧，是好事情也是坏事情。总之还得努力。今天记录下自己的蓝牙聊天小项目的进展。本次做了下UI这边的东西。实现了文字之间的聊天。目前遇到比较大的问题就是如果实现多人聊天？还有要实现语音和图片的传输，下周应该实现图片的传输。话不多说先上图。<br><img src="http://img.blog.csdn.net/20151115235307418" alt="这里写图片描述"></p>
-<p><img src="http://img.blog.csdn.net/20151115235339901" alt="这里写图片描述"></p>
-<p><img src="http://img.blog.csdn.net/20151115235507789" alt="这里写图片描述"></p>
-<p><img src="http://img.blog.csdn.net/20151115235522420" alt="这里写图片描述"></p>
-<p>嗯~主要是做了些UI的东西。然后实现了文字的点对点聊天。代码准备做好后一次性上传一个项目。好啦。加油啊！</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
-    <article id="post-自定义Switch——第一次写博客" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2015/11/25/自定义Switch——第一次写博客/" class="article-date">
-  	<time datetime="2015-11-25T11:22:36.814Z" itemprop="datePublished">2015-11-25</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/25/自定义Switch——第一次写博客/">自定义Switch——第一次写博客</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>   本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑<br>   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3–MD大哭）。好吧自己动手丰衣足食，其实这个东西很简单。话不多说上代码。可能写这个就是给自己看，好让自己的思路更加清晰点。额~莫名都这么晚了。</p>
-<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.dyk.viewdemo;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">import</span> android.content.Context;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Bitmap;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.BitmapFactory;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Canvas;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Matrix;</span><br><span class="line">    <span class="keyword">import</span> android.graphics.Paint;</span><br><span class="line">    <span class="keyword">import</span> android.util.AttributeSet;</span><br><span class="line">    <span class="keyword">import</span> android.view.MotionEvent;</span><br><span class="line">    <span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">      * Created by DYK on 2015/10/10.</span><br><span class="line">    */</span></span><br><span class="line">       <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwitchButton</span> <span class="keyword">extends</span> <span class="title">View</span> <span class="keyword">implements</span>  <span class="title">View</span>.<span class="title">OnTouchListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//两张背景一个滑动的小按钮，不一定非得是Bitmap,发挥想象力咯</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> Bitmap bg_Open;</span><br><span class="line">    <span class="keyword">private</span> Bitmap bg_Close;</span><br><span class="line">    <span class="keyword">private</span> Bitmap slip_Button;</span><br><span class="line"></span><br><span class="line"><span class="comment">//OnTouch()记录你的手指轨迹然后在onDraw()里绘制（这都是国际惯例了）</span></span><br><span class="line">      </span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">float</span> StartX;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">float</span> EndX;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//两个标记的小东西，是否在滑动？是open还是close?</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> IsSlip = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> Status = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//对外的接口，要不然别人怎么知道是打开还是关闭</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> OnChangedListener onChangedListener;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SwitchButton</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(context, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SwitchButton</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取资源，没啥好玩的</span></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        bg_Open = BitmapFactory.decodeResource(getResources(), R.drawable.open);</span><br><span class="line">        bg_Close = BitmapFactory.decodeResource(getResources(), R.drawable.close);</span><br><span class="line">        slip_Button = BitmapFactory.decodeResource(getResources(), R.drawable.slip);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        setOnTouchListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//简单期间，直接把大小设置成了背景图的大小，开发中不要这么做</span></span><br><span class="line">   </span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        setMeasuredDimension(bg_Open.getWidth(), bg_Open.getHeight());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据你Action.up的X位置实现活动和最终status的判断，小学生都能搞定。关于图片的缩放你可以好好的研究下，一用矩阵啦和Rect。</span></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line">        Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">        Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">        <span class="keyword">if</span> (EndX &lt; bg_Open.getWidth() / <span class="number">2</span>)</span><br><span class="line">            canvas.drawBitmap(bg_Open, matrix, paint);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            canvas.drawBitmap(bg_Close, matrix, paint);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">float</span> tempX = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IsSlip) &#123;</span><br><span class="line">            <span class="keyword">if</span> (EndX &gt;= bg_Open.getWidth())</span><br><span class="line">                tempX = bg_Open.getWidth() - slip_Button.getWidth() / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tempX = EndX - slip_Button.getWidth() / <span class="number">2</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (Status)</span><br><span class="line">                tempX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                tempX = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (tempX &lt; <span class="number">0</span>)</span><br><span class="line">            tempX = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (tempX &gt; bg_Open.getWidth() - slip_Button.getWidth()) &#123;</span><br><span class="line">            tempX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">        &#125;</span><br><span class="line">        canvas.drawBitmap(slip_Button, tempX, <span class="number">0</span>, paint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View view, MotionEvent motionEvent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (motionEvent.getAction()) &#123;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">                <span class="keyword">if</span> (motionEvent.getX() &gt; bg_Open.getWidth() || motionEvent.getY() &gt; bg_Open.getHeight())</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    IsSlip = <span class="keyword">true</span>;</span><br><span class="line">                    StartX = motionEvent.getX();</span><br><span class="line">                    EndX = StartX;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">                EndX = motionEvent.getX();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                IsSlip = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">if</span> (motionEvent.getX() &gt;= bg_Open.getWidth() / <span class="number">2</span>) &#123;</span><br><span class="line">                    Status = <span class="keyword">true</span>;</span><br><span class="line">                    EndX = bg_Open.getWidth() - slip_Button.getWidth();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    Status = <span class="keyword">false</span>;</span><br><span class="line">                    EndX = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">               <span class="comment">// onChangedListener.OnChangedListner(Status);</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        invalidate();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setStatus</span><span class="params">(<span class="keyword">boolean</span> status)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (status)</span><br><span class="line">            EndX = bg_Open.getWidth();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            EndX = <span class="number">0</span>;</span><br><span class="line">        Status = status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">setOnChangedListener</span><span class="params">(OnChangedListener listener)</span> </span>&#123;</span><br><span class="line">        onChangedListener = listener;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">OnChangedListener</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">OnChangedListner</span><span class="params">(<span class="keyword">boolean</span> status)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>国际惯例上图，那三张图是我用画图工具自己画的，嘻嘻<br><img src="http://img.blog.csdn.net/20151011013226814" alt="这里写图片描述"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  
     <article id="post-我是小段果果" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -569,6 +228,300 @@ public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
       
       
 
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-蓝牙聊天小项目——持续更新中（2015.11.15更）" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/11/15/蓝牙聊天小项目——持续更新中（2015.11.15更）/" class="article-date">
+  	<time datetime="2015-11-14T16:00:00.000Z" itemprop="datePublished">2015-11-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/15/蓝牙聊天小项目——持续更新中（2015.11.15更）/">蓝牙聊天小项目——持续更新中（2015.11.15更）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>   只要写上博客，感觉就停不下来。每周末不写点东西就感觉本周缺失点什么。最近给自己想了两个方向的内容，第一个方向是写些关于插件化的内容，第二就是蓝牙方向。好了啦，不纠结了反正两个方向我一定都会写出来的。先从简单的来弄吧，最近如果闲下来会持续写一个利用蓝牙实现聊天的小项目。也不知道多久会写完，反正断断续续会写到博客中。<br>  蓝牙不是太了解，大概粗的一瞅，WoWoW——BluetoothServerSocket，BluetoothSocket。一看到Socket就激动了，本人是网路工程专业出生，什么TCP/IP，OIS七层模型上学时候熟的很（当初在学校也是可以制霸一个班级）。以前用C#开发Socket顺的很，什么单播，组播，广播的。这突然就觉得Android蓝牙开发也应该差不多。然而事实并不是我想象中的那么容易。<br>  两个设备想要通信的前提是要知道对方的存在，在普通的Socket开发中，只要一台设备上线，直接发送个广播，在线设备收到这个广播后在向该广播的源地址发送个单播，bingo。两个设备就可以聊天啦。但是蓝牙额~~~上代码。<br>  首先说下今晚的目标，打开蓝牙然后扫描设备并显示出来。</p>
+<h2 id="<!-more->">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/蓝牙/">蓝牙</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/11/15/蓝牙聊天小项目——持续更新中（2015.11.15更）/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-ANT批量打包——个人笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/02/ANT批量打包——个人笔记/" class="article-date">
+  	<time datetime="2015-10-02T07:30:16.000Z" itemprop="datePublished">2015-10-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/02/ANT批量打包——个人笔记/">ANT批量打包——个人笔记</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>  博客沉默了一周，趁今天，经过两天的休整后精神头儿比较足，就把最近学习到的ANT批量打包记录下来。要说深入的研究还差点火候。但是修修改改还是实现了自己的需求。好了啦，先说说ANT批量打包的背景。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ANT/">ANT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android打包/">android打包</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/10/02/ANT批量打包——个人笔记/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-仿keep休息倒计时——自定义控件" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/08/08/仿keep休息倒计时——自定义控件/" class="article-date">
+  	<time datetime="2015-08-07T16:00:00.000Z" itemprop="datePublished">2015-08-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/08/仿keep休息倒计时——自定义控件/">仿keep休息倒计时——自定义控件</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>  今天中午不是很饿，闲来无事写点小东西。像傻瓜一样努力 by小段。<br>  最近一直在用keep健身，感觉很不错。发现它休息时候有个小东西蛮好的，不过也很常见一个倒计时的控件，其实很简单，我也就动手写下。先上人家的样子咯。<br>     <img src="http://img.blog.csdn.net/20151029122250854" alt="这里写图片描述"><br>   简短的分析下，里面是文字，下面是个圆圈，上面是个圆弧。（呵呵简单的很）那直接就上代码了。中午写的就是图简单咯。</p>
+<h2 id="<!-more->">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/08/08/仿keep休息倒计时——自定义控件/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-View的事件分发机制——简单明了" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/06/16/View的事件分发机制——简单明了/" class="article-date">
+  	<time datetime="2015-06-15T16:00:00.000Z" itemprop="datePublished">2015-06-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/06/16/View的事件分发机制——简单明了/">View的事件分发机制——简单明了</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。</p>
+<p>问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说先上一段小代码。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View事件分发/">View事件分发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/06/16/View的事件分发机制——简单明了/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-自定义Switch——第一次写博客" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/05/01/自定义Switch——第一次写博客/" class="article-date">
+  	<time datetime="2015-04-30T16:00:00.000Z" itemprop="datePublished">2015-05-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/05/01/自定义Switch——第一次写博客/">自定义Switch——第一次写博客</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>   本人勉强算是一枚初中级的Android开发吧，接触Android大概有一年左右的时间了。其实也就是工作了将近一年左右的时间，从大学校园步入社会工作感概万千，当然技术上的收获还是很大的。可能技术人员都会写点博客吧，那我也就随着大伙浪一波。偷笑<br>   深夜突发奇想写点什么那？以前用过系统自带的Switch。但是只能是4.0以上的系统才可以用。（本人目前的主要工作内容是支付SDK，boss让我兼容到2.3–MD大哭）。好吧自己动手丰衣足食，其实这个东西很简单。话不多说上代码。可能写这个就是给自己看，好让自己的思路更加清晰点。额~莫名都这么晚了。</p>
+<h2 id="<!-more->">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义View/">自定义View</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2015/05/01/自定义Switch——第一次写博客/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>

@@ -9,11 +9,11 @@
 问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说">
 <meta property="og:type" content="article">
 <meta property="og:title" content="View的事件分发机制——简单明了">
-<meta property="og:url" content="http://yoursite.com/2015/11/25/View的事件分发机制——简单明了/index.html">
+<meta property="og:url" content="http://yoursite.com/2015/06/16/View的事件分发机制——简单明了/index.html">
 <meta property="og:site_name" content="小段果果的个人博客">
 <meta property="og:description" content="最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。
 问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说">
-<meta property="og:updated_time" content="2015-11-25T11:23:54.990Z">
+<meta property="og:updated_time" content="2015-11-30T01:37:22.919Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="View的事件分发机制——简单明了">
 <meta name="twitter:description" content="最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。
@@ -118,7 +118,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						
+						<a href="/tags/ANT/" style="font-size: 10px;">ANT</a> <a href="/tags/View事件分发/" style="font-size: 10px;">View事件分发</a> <a href="/tags/android/" style="font-size: 20px;">android</a> <a href="/tags/android打包/" style="font-size: 10px;">android打包</a> <a href="/tags/自定义View/" style="font-size: 15px;">自定义View</a> <a href="/tags/蓝牙/" style="font-size: 10px;">蓝牙</a>
 					</div>
 				</section>
 				
@@ -197,8 +197,8 @@
       <div class="body-wrap"><article id="post-View的事件分发机制——简单明了" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/11/25/View的事件分发机制——简单明了/" class="article-date">
-  	<time datetime="2015-11-25T11:23:54.990Z" itemprop="datePublished">2015-11-25</time>
+      <a href="/2015/06/16/View的事件分发机制——简单明了/" class="article-date">
+  	<time datetime="2015-06-15T16:00:00.000Z" itemprop="datePublished">2015-06-16</time>
 </a>
     </div>
   
@@ -219,6 +219,10 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/View事件分发/">View事件分发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li></ul>
+	</div>
+
         
 
         <div class="clearfix"></div>
@@ -229,6 +233,7 @@
       
         <p>最近在我们的小规模Android技术群有个人问了一个问题，关于事件分发的问题。“父控件（ViewGroup）需要实现左右滑动，而父控件中的子View又要实现OnClick方法”。他的问题就是子View实现了OnClick方法而父控件的OnTouch不响应。</p>
 <p>问题就是这样，其实搞定这个问题很简单。不过得弄清楚View的事件分发。话说普通Android程序员源码瞅瞅就成了，不用死气摆列的弄懂。话不多说先上一段小代码。</p>
+<a id="more"></a>
 <pre><code>//开始分发咯
 public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
 {
@@ -255,18 +260,18 @@ public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
     
 <nav id="article-nav">
   
-    <a href="/2015/11/25/ANT批量打包——个人笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/08/08/仿keep休息倒计时——自定义控件/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          ANT批量打包——个人笔记
+          仿keep休息倒计时——自定义控件
         
       </div>
     </a>
   
   
-    <a href="/2015/11/25/仿keep休息倒计时——自定义控件/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">仿keep休息倒计时——自定义控件</div>
+    <a href="/2015/05/01/自定义Switch——第一次写博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">自定义Switch——第一次写博客</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -295,7 +300,7 @@ public boolean dispatchTouchEvent(<span class="type">MotionEvent</span> event)
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="View的事件分发机制——简单明了" data-title="View的事件分发机制——简单明了" data-url="http://yoursite.com/2015/11/25/View的事件分发机制——简单明了/"></div>
+	<div class="ds-thread" data-thread-key="View的事件分发机制——简单明了" data-title="View的事件分发机制——简单明了" data-url="http://yoursite.com/2015/06/16/View的事件分发机制——简单明了/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
